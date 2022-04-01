@@ -24,7 +24,6 @@ ALTER TABLE Исполнители ADD CONSTRAINT id_genre FOREIGN KEY (id_genre
 
 --Домашнее задание «Проектирование БД. Связи. 3НФ»
 ALTER TABLE Исполнители DROP COLUMN id_genre;
-ALTER TABLE Альбомы DROP COLUMN id_artist;
 
 CREATE TABLE IF NOT EXISTS Жанры_Исполнители (
 	id_genre INTEGER REFERENCES Жанры(id_genre) NOT null,
@@ -38,8 +37,10 @@ CREATE TABLE IF NOT EXISTS Сборники (
 	id_collection SERIAL PRIMARY key,
 	Название_сборника VARCHAR(100) NOT NULL, 
 	Год_выпуска INTEGER NOT NULL,
+	id_track INTEGER REFERENCES Треки(id_track) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS Сборники_Треки (
 	id_collection INTEGER REFERENCES Сборники(id_collection) NOT null,
 	id_track INTEGER REFERENCES Треки(id_track) NOT null
 );
+ALTER TABLE Треки ALTER COLUMN Длительность type time USING "Длительность"::time;
