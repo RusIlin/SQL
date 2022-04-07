@@ -1,46 +1,48 @@
 --Домашнее задание «Работа с PostgreSQL. Создание БД»
-CREATE TABLE IF NOT EXISTS Исполнители (
-	id_artist SERIAL PRIMARY key,
-	Имя VARCHAR(50) NOT NULL unique,
-	id_genre INTEGER NOT NULL unique
+create table if not exists Исполнители (
+	id_artist serial primary key,
+	Имя VARCHAR(50) not null unique,
+	id_genre INTEGER not null unique
 );
-CREATE TABLE IF NOT EXISTS Альбомы (
-	id_album SERIAL PRIMARY key,
-	Название_альбома VARCHAR(100) NOT NULL, 
-	Год_выпуска INTEGER NOT NULL,
-	id_artist INTEGER REFERENCES Исполнители(id_artist) NOT NULL
+create table if not exists Альбомы (
+	id_album serial primary key,
+	Название_альбома VARCHAR(100) not null,
+	Год_выпуска INTEGER not null,
+	id_artist INTEGER references Исполнители(id_artist) not null
 );
-CREATE TABLE IF NOT EXISTS Треки (
-	id_track SERIAL PRIMARY key,
-	Название_трека VARCHAR(100) NOT NULL,
-	Длительность INTEGER NOT NULL,
-	id_album INTEGER REFERENCES Альбомы(id_album) NOT NULL
+create table if not exists Треки (
+	id_track serial primary key,
+	Название_трека VARCHAR(100) not null,
+	Длительность INTEGER not null,
+	id_album INTEGER references Альбомы(id_album) not null
 );
-CREATE TABLE IF NOT EXISTS Жанры (
-	id_genre SERIAL PRIMARY key,
-	Название_жанра VARCHAR(100) NOT NULL UNIQUE
+create table if not exists Жанры (
+	id_genre serial primary key,
+	Название_жанра VARCHAR(100) not null unique
 );
-ALTER TABLE Исполнители ADD CONSTRAINT id_genre FOREIGN KEY (id_genre) REFERENCES Жанры(id_genre);
+alter table Исполнители add constraint id_genre foreign key (id_genre) references Жанры(id_genre);
+
 
 --Домашнее задание «Проектирование БД. Связи. 3НФ»
-ALTER TABLE Исполнители DROP COLUMN id_genre;
-
-CREATE TABLE IF NOT EXISTS Жанры_Исполнители (
-	id_genre INTEGER REFERENCES Жанры(id_genre) NOT null,
-	id_artist INTEGER REFERENCES Исполнители(id_artist) NOT null
+alter table Исполнители drop column id_genre;
+alter table Альбомы drop column id_artist;
+create table if not exists Жанры_Исполнители (
+	id_genre INTEGER references Жанры(id_genre) not null,
+	id_artist INTEGER references Исполнители(id_artist) not null,
+	primary key(id_genre, id_artist)
 );
-CREATE TABLE IF NOT EXISTS Альбомы_Исполнители (
-	id_album INTEGER REFERENCES Альбомы(id_album) NOT null,
-	id_artist INTEGER REFERENCES Исполнители(id_artist) NOT null
+create table if not exists Альбомы_Исполнители (
+	id_album INTEGER references Альбомы(id_album) not null,
+	id_artist INTEGER references Исполнители(id_artist) not null,
+	primary key(id_album, id_artist)
 );
-CREATE TABLE IF NOT EXISTS Сборники (
-	id_collection SERIAL PRIMARY key,
-	Название_сборника VARCHAR(100) NOT NULL, 
-	Год_выпуска INTEGER NOT NULL,
-	id_track INTEGER REFERENCES Треки(id_track) NOT NULL
+create table if not exists Сборники (
+	id_collection serial primary key,
+	Название_сборника VARCHAR(100) not null,
+	Год_выпуска INTEGER not null
 );
-CREATE TABLE IF NOT EXISTS Сборники_Треки (
-	id_collection INTEGER REFERENCES Сборники(id_collection) NOT null,
-	id_track INTEGER REFERENCES Треки(id_track) NOT null
+create table if not exists Сборники_Треки (
+	id_collection INTEGER references Сборники(id_collection) not null,
+	id_track INTEGER references Треки(id_track) not null,
+	primary key(id_collection, id_track)
 );
-ALTER TABLE Треки ALTER COLUMN Длительность type time USING "Длительность"::time;
