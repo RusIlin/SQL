@@ -13,7 +13,7 @@ create table if not exists Альбомы (
 create table if not exists Треки (
 	id_track serial primary key,
 	Название_трека VARCHAR(100) not null,
-	Длительность INTEGER not null,
+	Длительность NUMERIC not null check(Длительность > 0),
 	id_album INTEGER references Альбомы(id_album) not null
 );
 create table if not exists Жанры (
